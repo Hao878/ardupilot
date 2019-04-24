@@ -78,6 +78,7 @@ public:
         BatteryFailsafe failsafe;              // stage failsafe the battery is in
         bool        healthy;                   // battery monitor is communicating correctly
     };
+    float       Yvoltage;
 
     // Return the number of battery monitor instances
     uint8_t num_instances(void) const { return _num_instances; }
