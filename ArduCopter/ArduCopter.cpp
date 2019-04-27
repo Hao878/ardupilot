@@ -193,16 +193,18 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 };
 
 constexpr int8_t Copter::_failsafe_priorities[7];
-
+AP_HAL::AnalogSource* chan;
 void Copter::setup()
 {
     // Load the default values of variables listed in var_info[]s
     AP_Param::setup_sketch_defaults();
 
+
     // setup storage layout for copter
     StorageManager::set_layout_copter();
 
     init_ardupilot();
+    chan = hal.analogin->channel(0);
 
     // initialise the main loop scheduler
     scheduler.init(&scheduler_tasks[0], ARRAY_SIZE(scheduler_tasks), MASK_LOG_PM);
@@ -412,6 +414,8 @@ void Copter::three_hz_loop()
     tuning();
 }
 
+
+//static int8_t pin;
 // one_hz_loop - runs at 1Hz
 void Copter::one_hz_loop()
 {
@@ -451,6 +455,12 @@ void Copter::one_hz_loop()
     // indicates that the sensor or subsystem is present but not
     // functioning correctly
     update_sensor_status_flags();
+    chan->set_pin(15);
+    //float v  = chan->voltage_average();
+    battery.Yvoltage= chan->voltage_average();
+    //hal.uartA->printf("\r\n[%u %.3f]\r\n ",(unsigned)pin, (double)v);
+
+    //gcs().send_text(MAV_SEVERITY_INFO, "haowp7@live.com");
 }
 
 // called at 50hz
